@@ -26,8 +26,8 @@ const Pokemon = () => {
   const { setLastElement } = useInfiniteScroll(handleReachEnd);
 
   return (
-    <>
-      <h1>Pokemon</h1>
+    <main className="bg-white">
+      <h1>Pokemon List</h1>
       {pageVariables.map((v, i) => (
         <PokemonList
           key={i}
@@ -42,7 +42,7 @@ const Pokemon = () => {
           }
         />
       ))}
-    </>
+    </main>
   );
 };
 

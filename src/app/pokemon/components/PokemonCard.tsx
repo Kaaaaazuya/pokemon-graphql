@@ -12,10 +12,15 @@ export const PokemonCard = ({ id, name, sprite }: PokemonListProps) => {
     "https://raw.githubusercontent.com/PokeAPI/sprites/master"
   );
 
+  const displayNum = "No." + id;
+
   return (
     <div key={id}>
-      <p key={id}>{name}</p>
-      <Image src={replacedString} alt={name} width={64} height={64} />
+      <p className="text-black">{name}</p>
+      <p className="text-black">{displayNum}</p>
+      <div className="bg-gray-200">
+        <Image src={replacedString} alt={name} width={200} height={200} />
+      </div>
     </div>
   );
 };
