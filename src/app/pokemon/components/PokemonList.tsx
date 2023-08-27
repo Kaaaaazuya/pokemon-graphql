@@ -1,21 +1,32 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useQuery } from "urql";
+import { PokemonType } from "../types/PokemonType";
 import { PokemonCard } from "./PokemonCard";
+import { PokemonTypeFilter } from "./PokemonTypeSelector";
 import Loading from "@/app/Loading";
 import { graphql } from "@/graphql/generated";
-import { Query_Root } from "@/graphql/generated/graphql";
+import {
+  Pokemon_V2_Pokemon_Bool_Exp,
+  Query_Root,
+} from "@/graphql/generated/graphql";
 
 type PokemonListProps = {
   offset: number;
   limit: number;
   setRef?: (ref: HTMLDivElement | null) => void;
+  condition: Pokemon_V2_Pokemon_Bool_Exp;
 };
 
 const GetPokemonListDocument = graphql(`
-  query pokemon_v2_pokemon($limit: Int, $offset: Int) {
-    pokemon_v2_pokemon(limit: $limit, offset: $offset) {
+  query pokemon_v2_pokemon(
+    $limit: Int
+    $offset: Int
+    $condition: pokemon_v2_pokemon_bool_exp
+  ) {
+    pokemon_v2_pokemon(limit: $limit, offset: $offset, where: $condition) {
       name
       id
       pokemon_v2_pokemonsprites {
@@ -32,10 +43,15 @@ const GetPokemonListDocument = graphql(`
   }
 `);
 
-export const PokemonList = ({ offset, limit, setRef }: PokemonListProps) => {
+export const PokemonList = ({
+  offset,
+  limit,
+  setRef,
+  condition,
+}: PokemonListProps) => {
   const [result] = useQuery<Query_Root["pokemon_v2_pokemon"]>({
     query: GetPokemonListDocument,
-    variables: { offset, limit },
+    variables: { offset, limit, condition },
   });
 
   const { data, fetching, error } = result;

@@ -1,4 +1,4 @@
-const PokemonType = {
+export const PokemonType = {
   normal: 1,
   fighting: 2,
   flying: 3,
@@ -18,7 +18,8 @@ const PokemonType = {
   dark: 17,
   fairy: 18,
 } as const;
-type PokemonType = (typeof PokemonType)[keyof typeof PokemonType];
+
+export type PokemonType = (typeof PokemonType)[keyof typeof PokemonType];
 // function toJapanese(type: PokemonType) {
 //   switch (type) {
 //     case Position.Top:

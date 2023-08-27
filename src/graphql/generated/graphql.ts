@@ -54283,6 +54283,7 @@ export type Subscription_RootPokemon_V2_Versionname_StreamArgs = {
 export type Pokemon_V2_PokemonQueryVariables = Exact<{
   limit: InputMaybe<Scalars["Int"]["input"]>;
   offset: InputMaybe<Scalars["Int"]["input"]>;
+  condition: InputMaybe<Pokemon_V2_Pokemon_Bool_Exp>;
 }>;
 
 export type Pokemon_V2_PokemonQuery = {
@@ -54321,6 +54322,17 @@ export const Pokemon_V2_PokemonDocument = {
           },
           type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
         },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "condition" },
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "pokemon_v2_pokemon_bool_exp" },
+          },
+        },
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -54343,6 +54355,14 @@ export const Pokemon_V2_PokemonDocument = {
                 value: {
                   kind: "Variable",
                   name: { kind: "Name", value: "offset" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "condition" },
                 },
               },
             ],
