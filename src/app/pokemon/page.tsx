@@ -1,53 +1,49 @@
 "use client";
 
-import { useQuery } from "urql";
+import { useState, useCallback } from "react";
 import { PokemonList } from "./components/PokemonList";
-import { graphql } from "@/graphql/generated";
-import { Pokemon_V2_Pokemon, Query_Root } from "@/graphql/generated/graphql";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
-const GetPokemonListDocument = graphql(`
-  query pokemon_v2_pokemon($limit: Int) {
-    pokemon_v2_pokemon(limit: $limit) {
-      name
-      id
-      pokemon_v2_pokemonsprites {
-        sprites
-      }
-    }
-  }
-`);
+const LIMIT = 30;
 
-const Pokemons = () => {
-  const limit = 30;
-  const [result] = useQuery<Query_Root["pokemon_v2_pokemon"]>({
-    query: GetPokemonListDocument,
-    variables: { limit },
-  });
+const Pokemon = () => {
+  const [pageVariables, setPageVariables] = useState([
+    {
+      offset: 0,
+      limit: LIMIT,
+    },
+  ]);
+  const handleReachEnd = useCallback(() => {
+    setPageVariables((v) => {
+      const lastPageVariable = v.at(-1);
+      const offset = lastPageVariable
+        ? lastPageVariable.offset + lastPageVariable.limit
+        : null;
 
-  const { data, fetching, error } = result;
-
-  if (fetching) return <p>Loading...</p>;
-  if (error) return <p>Oh no... {error.message}</p>;
-  if (!data || data == undefined) {
-    return <p>fetch data failed ...</p>;
-  }
-  const pokemons = data.pokemon_v2_pokemon;
+      return offset ? [...v, { offset, limit: LIMIT }] : v;
+    });
+  }, []);
+  const { setLastElement } = useInfiniteScroll(handleReachEnd);
 
   return (
     <>
       <h1>Pokemon</h1>
-      <ul>
-        {pokemons.map((pokemon) => (
-          <PokemonList
-            key={pokemon.id}
-            id={pokemon.id}
-            name={pokemon.name}
-            sprite={pokemon.pokemon_v2_pokemonsprites[0].sprites}
-          />
-        ))}
-      </ul>
+      {pageVariables.map((v, i) => (
+        <PokemonList
+          key={i}
+          offset={v.offset}
+          limit={v.limit}
+          setRef={
+            i === pageVariables.length - 1
+              ? (ref) => {
+                  setLastElement(ref);
+                }
+              : undefined
+          }
+        />
+      ))}
     </>
   );
 };
 
-export default Pokemons;
+export default Pokemon;

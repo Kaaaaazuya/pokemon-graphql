@@ -1,24 +1,62 @@
-import Image from "next/image";
-import { Pokemon_V2_Pokemon } from "@/graphql/generated/graphql";
+"use client";
+
+import { useQuery } from "urql";
+import { PokemonCard } from "./PokemonCard";
+import { graphql } from "@/graphql/generated";
+import { Query_Root } from "@/graphql/generated/graphql";
 
 type PokemonListProps = {
-  id: string;
-  name: string;
-  sprite: string;
+  offset: number;
+  limit: number;
+  setRef?: (ref: HTMLDivElement | null) => void;
 };
 
-export const PokemonList = ({ id, name, sprite }: PokemonListProps) => {
-  const replacedString = JSON.parse(sprite).front_default.replace(
-    "/media",
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master"
-  );
+const GetPokemonListDocument = graphql(`
+  query pokemon_v2_pokemon($limit: Int, $offset: Int) {
+    pokemon_v2_pokemon(limit: $limit, offset: $offset) {
+      name
+      id
+      pokemon_v2_pokemonsprites {
+        sprites
+      }
+      pokemon_v2_pokemontypes {
+        type_id
+        pokemon_v2_type {
+          name
+          id
+        }
+      }
+    }
+  }
+`);
 
-  console.log(id);
+export const PokemonList = ({ offset, limit, setRef }: PokemonListProps) => {
+  const [result] = useQuery<Query_Root["pokemon_v2_pokemon"]>({
+    query: GetPokemonListDocument,
+    variables: { offset, limit },
+  });
+
+  const { data, fetching, error } = result;
+
+  if (fetching) return <p>Loading...</p>;
+  if (error) return <p>Oh no... {error.message}</p>;
+  if (!data || data == undefined) {
+    return <p>fetch data failed ...</p>;
+  }
+  const pokemons = data.pokemon_v2_pokemon;
 
   return (
-    <div key={id}>
-      <li key={id}>{name}</li>
-      <Image src={replacedString} alt={name} width={64} height={64} />
-    </div>
+    <>
+      <div ref={setRef}>
+        {pokemons.map((pokemon) => (
+          <PokemonCard
+            key={pokemon.id}
+            id={pokemon.id}
+            name={pokemon.name}
+            sprite={pokemon.pokemon_v2_pokemonsprites[0].sprites}
+          />
+        ))}
+      </div>
+    </>
   );
 };
