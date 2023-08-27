@@ -1,7 +1,9 @@
 "use client";
 
+import { createPortal } from "react-dom";
 import { useQuery } from "urql";
 import { PokemonCard } from "./PokemonCard";
+import Loading from "@/app/Loading";
 import { graphql } from "@/graphql/generated";
 import { Query_Root } from "@/graphql/generated/graphql";
 
@@ -38,7 +40,7 @@ export const PokemonList = ({ offset, limit, setRef }: PokemonListProps) => {
 
   const { data, fetching, error } = result;
 
-  if (fetching) return <p>Loading...</p>;
+  if (fetching) return createPortal(<Loading />, document.body);
   if (error) return <p>Oh no... {error.message}</p>;
   if (!data || data == undefined) {
     return <p>fetch data failed ...</p>;
