@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint --dir src",
     "lint:fix": "yarn lint --fix",
+    "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'",
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
@@ -37,6 +38,8 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/client-preset": "4.1.0",
-    "@graphql-codegen/schema-ast": "^4.0.0"
+    "@graphql-codegen/schema-ast": "^4.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "^3.0.2"
   }
 }
