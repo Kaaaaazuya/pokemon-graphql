@@ -1,8 +1,9 @@
 "use client";
-import Image from "next/image";
+
 import { useQuery } from "urql";
+import { PokemonList } from "./components/PokemonList";
 import { graphql } from "@/graphql/generated";
-import { Query_Root } from "@/graphql/generated/graphql";
+import { Pokemon_V2_Pokemon, Query_Root } from "@/graphql/generated/graphql";
 
 const GetPokemonListDocument = graphql(`
   query pokemon_v2_pokemon($limit: Int) {
@@ -32,41 +33,18 @@ const Pokemons = () => {
   }
   const pokemons = data.pokemon_v2_pokemon;
 
-  const sprites = pokemons[0].pokemon_v2_pokemonsprites[0].sprites;
-  var obj = JSON.parse(sprites);
-  console.log(obj.front_default);
-  const replacedString = obj.front_default.replace(
-    "/media/",
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master"
-  );
-
-  console.log(replacedString);
-
   return (
     <>
       <h1>Pokemon</h1>
       <ul>
-        {pokemons.map((pokemon) => {
-          const sprites = pokemon.pokemon_v2_pokemonsprites[0].sprites;
-          var obj = JSON.parse(sprites);
-          console.log(obj.front_default);
-          const replacedString = obj.front_default.replace(
-            "/media",
-            "https://raw.githubusercontent.com/PokeAPI/sprites/master"
-          );
-
-          return (
-            <div key={pokemon.id}>
-              <li key={pokemon.id}>{pokemon.name}</li>
-              <Image
-                src={replacedString}
-                alt={pokemon.name}
-                width={64}
-                height={64}
-              />
-            </div>
-          );
-        })}
+        {pokemons.map((pokemon) => (
+          <PokemonList
+            key={pokemon.id}
+            id={pokemon.id}
+            name={pokemon.name}
+            sprite={pokemon.pokemon_v2_pokemonsprites[0].sprites}
+          />
+        ))}
       </ul>
     </>
   );
