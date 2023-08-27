@@ -1,6 +1,6 @@
 "use client";
 import { Provider } from "urql";
-import { client } from "@/lib/graphql";
+import { client } from "@/graphql/graphql";
 
 const App = () => (
   <Provider value={client}>

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as types from './graphql';
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 /**
  * Map of all GraphQL operations in the project.
@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query getPokemons {\n    pokemon_v2_pokemon(limit:30, where:{pokemon_species_id: {_gt: 500}}) {\n      name\n      id\n    }\n  }\n": types.GetPokemonsDocument,
+    "\n  query pokemon_v2_pokemon($limit: Int) {\n    pokemon_v2_pokemon(limit: $limit) {\n      name\n      id\n      pokemon_v2_pokemonsprites {\n        sprites\n      }\n    }\n  }\n": types.Pokemon_V2_PokemonDocument,
 };
 
 /**
@@ -33,7 +33,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getPokemons {\n    pokemon_v2_pokemon(limit:30, where:{pokemon_species_id: {_gt: 500}}) {\n      name\n      id\n    }\n  }\n"): (typeof documents)["\n  query getPokemons {\n    pokemon_v2_pokemon(limit:30, where:{pokemon_species_id: {_gt: 500}}) {\n      name\n      id\n    }\n  }\n"];
+export function graphql(source: "\n  query pokemon_v2_pokemon($limit: Int) {\n    pokemon_v2_pokemon(limit: $limit) {\n      name\n      id\n      pokemon_v2_pokemonsprites {\n        sprites\n      }\n    }\n  }\n"): (typeof documents)["\n  query pokemon_v2_pokemon($limit: Int) {\n    pokemon_v2_pokemon(limit: $limit) {\n      name\n      id\n      pokemon_v2_pokemonsprites {\n        sprites\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

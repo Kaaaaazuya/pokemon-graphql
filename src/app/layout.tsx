@@ -3,7 +3,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Provider } from "urql";
-import { client } from "@/lib/graphql";
+import { client } from "@/graphql/graphql";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,9 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Provider value={client}>
-        <body className={inter.className}>{children}</body>
-      </Provider>
+      <body className={inter.className}>
+        <Provider value={client}>{children}</Provider>
+      </body>
     </html>
   );
 }
