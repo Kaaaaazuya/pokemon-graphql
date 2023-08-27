@@ -44,7 +44,7 @@ const Pokemon = () => {
 
   return (
     <main className="bg-white">
-      <h1>Pokemon List</h1>
+      <h1 className="text-black">Pokemon List</h1>
       <PokemonTypeFilter onChange={handleSelectedTypesChange} />
       {pageVariables.map((v, i) => (
         <PokemonList

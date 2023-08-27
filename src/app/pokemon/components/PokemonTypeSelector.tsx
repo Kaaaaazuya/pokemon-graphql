@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PokemonType } from "../types/PokemonType";
+import { PokemonType, typeColors } from "../types/PokemonType";
 
 export const PokemonTypeFilter = ({
   onChange,
@@ -18,12 +18,8 @@ export const PokemonTypeFilter = ({
     );
   };
 
-  const toggleAllTypes = () => {
-    if (selectedTypes.length === Object.keys(PokemonType).length) {
-      setSelectedTypes([]); // All OFF
-    } else {
-      setSelectedTypes([...Object.values(PokemonType)]); // All ON
-    }
+  const areAllTypesSelected = () => {
+    return selectedTypes.length === Object.values(PokemonType).length;
   };
 
   useEffect(() => {
@@ -32,24 +28,22 @@ export const PokemonTypeFilter = ({
 
   return (
     <div>
-      <div className="mb-2">
-        <button
-          onClick={toggleAllTypes}
-          className="bg-blue-500 text-white px-3 py-1 rounded"
-        >
-          {selectedTypes.length === Object.keys(PokemonType).length
-            ? "All OFF"
-            : "All ON"}
-        </button>
-      </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap justify-around items-center	">
+        {!areAllTypesSelected() && (
+          <button
+            onClick={() => setSelectedTypes([...Object.values(PokemonType)])}
+            className="mb-2 bg-blue-500 text-white px-3 py-1 rounded-full hover:bg-blue-600"
+          >
+            ALL
+          </button>
+        )}
         {Object.entries(PokemonType).map(([typeName, typeId]) => (
           <span
             key={typeId}
             onClick={() => toggleTypeSelection(typeId)}
             className={`cursor-pointer px-2 py-1 border border-gray-400 rounded ${
               selectedTypes.includes(typeId)
-                ? "bg-blue-500 text-white"
+                ? `${typeColors[typeName]} text-white`
                 : "bg-white text-black"
             }`}
           >

@@ -19,6 +19,27 @@ export const PokemonType = {
   fairy: 18,
 } as const;
 
+export const typeColors = {
+  normal: "bg-gray-300",
+  fighting: "bg-red-500",
+  flying: "bg-blue-200",
+  poison: "bg-purple-600",
+  ground: "bg-yellow-400",
+  rock: "bg-gray-500",
+  bug: "bg-green-500",
+  ghost: "bg-purple-800",
+  steel: "bg-gray-400",
+  fire: "bg-red-700",
+  water: "bg-blue-500",
+  grass: "bg-green-600",
+  electric: "bg-yellow-300",
+  psychic: "bg-pink-500",
+  ice: "bg-blue-300",
+  dragon: "bg-indigo-600",
+  dark: "bg-gray-700",
+  fairy: "bg-pink-300",
+} as const;
+
 export type PokemonType = (typeof PokemonType)[keyof typeof PokemonType];
 // function toJapanese(type: PokemonType) {
 //   switch (type) {
