@@ -7,7 +7,7 @@ type PokemonListProps = {
 };
 
 export const PokemonCard = ({ id, name, sprite }: PokemonListProps) => {
-  const replacedString = JSON.parse(sprite).front_default.replace(
+  const replacedString = JSON.parse(sprite).front_default?.replace(
     "/media",
     "https://raw.githubusercontent.com/PokeAPI/sprites/master"
   );
