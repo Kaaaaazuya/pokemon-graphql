@@ -1,13 +1,15 @@
-"use client";
+'use client'
 
-import { useState, useCallback } from "react";
-import { PokemonList } from "./components/PokemonList";
-import { PokemonTypeFilter } from "./components/PokemonTypeSelector";
-import { PokemonType } from "./types/PokemonType";
-import { Pokemon_V2_Pokemon_Bool_Exp } from "@/graphql/generated/graphql";
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useState, useCallback } from 'react'
 
-const LIMIT = 30;
+import { Pokemon_V2_Pokemon_Bool_Exp } from '@/graphql/generated/graphql'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+
+import { PokemonList } from './components/PokemonList'
+import { PokemonTypeFilter } from './components/PokemonTypeSelector'
+import { PokemonType } from './types/PokemonType'
+
+const LIMIT = 30
 
 const Pokemon = () => {
   const [pageVariables, setPageVariables] = useState([
@@ -15,36 +17,34 @@ const Pokemon = () => {
       offset: 0,
       limit: LIMIT,
     },
-  ]);
+  ])
   const handleReachEnd = useCallback(() => {
     setPageVariables((v) => {
-      const lastPageVariable = v.at(-1);
-      const offset = lastPageVariable
-        ? lastPageVariable.offset + lastPageVariable.limit
-        : null;
+      const lastPageVariable = v.at(-1)
+      const offset = lastPageVariable ? lastPageVariable.offset + lastPageVariable.limit : null
 
-      return offset ? [...v, { offset, limit: LIMIT }] : v;
-    });
-  }, []);
-  const { setLastElement } = useInfiniteScroll(handleReachEnd);
+      return offset ? [...v, { offset, limit: LIMIT }] : v
+    })
+  }, [])
+  const { setLastElement } = useInfiniteScroll(handleReachEnd)
 
   const [condition, setCondition] = useState<Pokemon_V2_Pokemon_Bool_Exp>({
     pokemon_v2_pokemontypes: {
       pokemon_v2_type: { id: { _in: [...Object.values(PokemonType)] } },
     },
-  });
+  })
 
   const handleSelectedTypesChange = (selectedTypes: number[]) => {
     setCondition({
       pokemon_v2_pokemontypes: {
         pokemon_v2_type: { id: { _in: selectedTypes } },
       },
-    });
-  };
+    })
+  }
 
   return (
-    <main className="bg-white">
-      <h1 className="text-black">Pokemon List</h1>
+    <main className='bg-white'>
+      <h1 className='text-black'>Pokemon List</h1>
       <PokemonTypeFilter onChange={handleSelectedTypesChange} />
       {pageVariables.map((v, i) => (
         <PokemonList
@@ -54,7 +54,7 @@ const Pokemon = () => {
           setRef={
             i === pageVariables.length - 1
               ? (ref) => {
-                  setLastElement(ref);
+                  setLastElement(ref)
                 }
               : undefined
           }
@@ -62,7 +62,7 @@ const Pokemon = () => {
         />
       ))}
     </main>
-  );
-};
+  )
+}
 
-export default Pokemon;
+export default Pokemon

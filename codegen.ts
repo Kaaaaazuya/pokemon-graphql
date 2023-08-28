@@ -1,12 +1,12 @@
-import type { CodegenConfig } from "@graphql-codegen/cli";
+import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "https://beta.pokeapi.co/graphql/v1beta",
-  documents: ["src/**/*.tsx"],
+  schema: 'https://beta.pokeapi.co/graphql/v1beta',
+  documents: ['src/**/*.tsx'],
   generates: {
-    "src/graphql/generated/": {
-      preset: "client",
+    'src/graphql/generated/': {
+      preset: 'client',
       plugins: [
         {
           // Custom Scalar の branded type 定義
@@ -27,15 +27,15 @@ const config: CodegenConfig = {
           defaultValue: false,
         },
         scalars: {
-          Date: "DateString",
+          Date: 'DateString',
         },
         enumsAsTypes: true,
       },
     },
   },
   hooks: {
-    afterOneFileWrite: [""],
+    afterOneFileWrite: [''],
   },
-};
+}
 
-export default config;
+export default config
