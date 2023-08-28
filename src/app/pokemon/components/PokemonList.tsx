@@ -49,7 +49,6 @@ export const PokemonList = ({ offset, limit, setRef, condition }: PokemonListPro
     return <p>fetch data failed ...</p>
   }
   const pokemons = data.pokemon_v2_pokemon
-
   return (
     <>
       <div ref={setRef} className='gap-y-30 grid grid-cols-3	justify-items-center gap-x-10'>

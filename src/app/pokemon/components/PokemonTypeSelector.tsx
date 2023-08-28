@@ -8,6 +8,7 @@ export const PokemonTypeFilter = ({
   onChange: (selectedTypes: number[]) => void
 }) => {
   const [selectedTypes, setSelectedTypes] = useState<number[]>([...Object.values(PokemonType)])
+  const [prevSelectedTypes, setPrevSelectedTypes] = useState<number[]>([])
 
   const toggleTypeSelection = (typeId: number) => {
     setSelectedTypes((prev) =>
@@ -20,8 +21,12 @@ export const PokemonTypeFilter = ({
   }
 
   useEffect(() => {
-    onChange(selectedTypes)
-  }, [onChange, selectedTypes])
+    // 前回の selectedTypes と現在の selectedTypes が異なる場合のみ onChange を呼び出す
+    if (JSON.stringify(prevSelectedTypes) !== JSON.stringify(selectedTypes)) {
+      onChange(selectedTypes)
+      setPrevSelectedTypes(selectedTypes)
+    }
+  }, [onChange, selectedTypes, prevSelectedTypes])
 
   return (
     <div>
