@@ -1,4 +1,24 @@
-export const PokemonType = {
+type PokemonTypeKeys =
+  | 'normal'
+  | 'fighting'
+  | 'flying'
+  | 'poison'
+  | 'ground'
+  | 'rock'
+  | 'bug'
+  | 'ghost'
+  | 'steel'
+  | 'fire'
+  | 'water'
+  | 'grass'
+  | 'electric'
+  | 'psychic'
+  | 'ice'
+  | 'dragon'
+  | 'dark'
+  | 'fairy'
+
+export const PokemonType: Record<PokemonTypeKeys, number> = {
   normal: 1,
   fighting: 2,
   flying: 3,
@@ -19,7 +39,9 @@ export const PokemonType = {
   fairy: 18,
 } as const
 
-export const typeColors = {
+type PokemonTypeColor = Record<PokemonTypeKeys, string>
+
+export const typeColor: PokemonTypeColor = {
   normal: 'bg-gray-300',
   fighting: 'bg-red-500',
   flying: 'bg-blue-200',
@@ -41,52 +63,31 @@ export const typeColors = {
 } as const
 
 export type PokemonType = (typeof PokemonType)[keyof typeof PokemonType]
-// function toJapanese(type: PokemonType) {
-//   switch (type) {
-//     case Position.Top:
-//       return "上";
-//     case Position.Right:
-//       return "右";
-//     case Position.Bottom:
-//       return "下";
-//     case Position.Left:
-//       return "左";
-//   }
-// }
 
-function toColor(type: PokemonType) {
-  switch (type) {
-    case PokemonType.normal:
-      return 'white'
-    case PokemonType.fighting:
-      return 'white'
-    case PokemonType.flying:
-      return 'white'
-    case PokemonType.poison:
-      return 'white'
-    case PokemonType.ground:
-      return 'white'
-    case PokemonType.rock:
-      return 'white'
-    case PokemonType.bug:
-      return 'white'
-    case PokemonType.ghost:
-      return 'white'
-    case PokemonType.steel:
-      return 'white'
-    case PokemonType.fire:
-      return 'white'
-    case PokemonType.water:
-      return 'white'
-    case PokemonType.grass:
-      return 'white'
-    case PokemonType.electric:
-      return 'white'
-    case PokemonType.ice:
-      return 'white'
-    case PokemonType.dragon:
-      return 'white'
-    case PokemonType.fairy:
-      return 'white'
+export function ToTextColor(typeKey: PokemonTypeKeys): string {
+  const backgroundColor = typeColor[typeKey]
+  switch (typeKey) {
+    case 'fighting':
+    case 'poison':
+    case 'rock':
+    case 'bug':
+    case 'ghost':
+    case 'fire':
+    case 'water':
+    case 'grass':
+    case 'electric':
+    case 'psychic':
+    case 'dragon':
+    case 'dark':
+      return `${backgroundColor} text-white`
+    default:
+      return `${backgroundColor} text-black`
   }
+}
+
+export function getTypeKeyById(typeId: number): PokemonTypeKeys | undefined {
+  const typeKey = Object.keys(PokemonType).find(
+    (key) => PokemonType[key as PokemonTypeKeys] === typeId,
+  )
+  return typeKey as PokemonTypeKeys | undefined
 }

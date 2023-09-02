@@ -1,13 +1,13 @@
 'use client'
 
-import { createPortal } from 'react-dom'
-import { useQuery } from 'urql'
+import { useState } from 'react'
 
-import Loading from '@/app/Loading'
-import { graphql } from '@/graphql/generated'
-import { Pokemon_V2_Pokemon_Bool_Exp, Query_Root } from '@/graphql/generated/graphql'
+import { Pokemon_V2_Pokemon_Bool_Exp } from '@/graphql/generated/graphql'
+import useModal from '@/hooks/useModal'
+import { usePokemonList } from '@/hooks/usePokemonList'
 
 import { PokemonCard } from './PokemonCard'
+import { PokemonDetailModal } from './PokemonDetailModal'
 
 type PokemonListProps = {
   offset: number
@@ -16,50 +16,47 @@ type PokemonListProps = {
   condition: Pokemon_V2_Pokemon_Bool_Exp
 }
 
-const GetPokemonListDocument = graphql(`
-  query pokemon_v2_pokemon($limit: Int, $offset: Int, $condition: pokemon_v2_pokemon_bool_exp) {
-    pokemon_v2_pokemon(limit: $limit, offset: $offset, where: $condition) {
-      name
-      id
-      pokemon_v2_pokemonsprites {
-        sprites
-      }
-      pokemon_v2_pokemontypes {
-        type_id
-        pokemon_v2_type {
-          name
-          id
-        }
-      }
-    }
-  }
-`)
-
 export const PokemonList = ({ offset, limit, setRef, condition }: PokemonListProps) => {
-  const [result] = useQuery<Query_Root['pokemon_v2_pokemon']>({
-    query: GetPokemonListDocument,
-    variables: { offset, limit, condition },
-  })
+  const { isModalOpen, openModal, closeModal } = useModal()
+  const [selectedPokemonId, setSelectedPokemonId] = useState<string | null>(null)
 
-  const { data, fetching, error } = result
+  const result = usePokemonList(offset, limit, condition) // カスタムフックの使用
+  const { data, error } = result
 
-  if (fetching) return createPortal(<Loading />, document.body)
   if (error) return <p>Oh no... {error.message}</p>
   if (!data || data == undefined) {
     return <p>fetch data failed ...</p>
   }
   const pokemons = data.pokemon_v2_pokemon
+
+  const handleOpenModal = (id: string) => {
+    setSelectedPokemonId(id)
+    openModal()
+  }
+
   return (
     <>
       <div ref={setRef} className='gap-y-30 grid grid-cols-3	justify-items-center gap-x-10'>
         {pokemons.map((pokemon) => (
-          <PokemonCard
-            key={pokemon.id}
-            id={pokemon.id}
-            name={pokemon.name}
-            sprite={pokemon.pokemon_v2_pokemonsprites[0].sprites}
-          />
+          <div key={pokemon.id}>
+            <PokemonCard
+              id={pokemon.id}
+              name={pokemon.name}
+              sprite={pokemon.pokemon_v2_pokemonsprites[0].sprites}
+              onClick={() => handleOpenModal(pokemon.id.toString())}
+            />
+          </div>
         ))}
+        {isModalOpen && selectedPokemonId && (
+          <PokemonDetailModal
+            id={selectedPokemonId}
+            isModalOpen={isModalOpen}
+            closeModal={() => {
+              closeModal()
+              setSelectedPokemonId(null)
+            }}
+          />
+        )}
       </div>
     </>
   )

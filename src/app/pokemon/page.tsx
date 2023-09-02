@@ -18,6 +18,13 @@ const Pokemon = () => {
       limit: LIMIT,
     },
   ])
+
+  const [condition, setCondition] = useState<Pokemon_V2_Pokemon_Bool_Exp>({
+    pokemon_v2_pokemontypes: {
+      pokemon_v2_type: { id: { _in: [...Object.values(PokemonType)] } },
+    },
+  })
+
   const handleReachEnd = useCallback(() => {
     setPageVariables((v) => {
       const lastPageVariable = v.at(-1)
@@ -26,26 +33,27 @@ const Pokemon = () => {
       return offset ? [...v, { offset, limit: LIMIT }] : v
     })
   }, [])
+
   const { setLastElement } = useInfiniteScroll(handleReachEnd)
 
-  const [condition, setCondition] = useState<Pokemon_V2_Pokemon_Bool_Exp>({
-    pokemon_v2_pokemontypes: {
-      pokemon_v2_type: { id: { _in: [...Object.values(PokemonType)] } },
-    },
-  })
-
-  const handleSelectedTypesChange = (selectedTypes: number[]) => {
+  const handleSelectedTypesChange = useCallback((selectedTypes: number[]) => {
     setCondition({
       pokemon_v2_pokemontypes: {
         pokemon_v2_type: { id: { _in: selectedTypes } },
       },
     })
-  }
+  }, [])
 
   return (
     <main className='bg-white'>
-      <h1 className='text-black'>Pokemon List</h1>
+      <div className=''>
+        <h1 className='bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-6xl font-extrabold text-transparent'>
+          Pokemon Zukan
+        </h1>
+      </div>
+
       <PokemonTypeFilter onChange={handleSelectedTypesChange} />
+      <hr className='my-4 h-0.5 border-t-0 bg-gray-100 opacity-100 dark:opacity-50' />
       {pageVariables.map((v, i) => (
         <PokemonList
           key={i}
