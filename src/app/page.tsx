@@ -8,3 +8,5 @@ const App = () => (
     <App />
   </Provider>
 )
+
+export default App
