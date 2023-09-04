@@ -7,6 +7,15 @@ const nextConfig = {
     // TODO: デプロイ確認用なの削除する
     ignoreBuildErrors: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/pokemon',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig
