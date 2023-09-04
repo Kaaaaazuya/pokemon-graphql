@@ -36,7 +36,7 @@ export const PokemonList = ({ offset, limit, setRef, condition }: PokemonListPro
 
   return (
     <>
-      <div ref={setRef} className='gap-y-30 grid grid-cols-3	justify-items-center gap-x-10'>
+      <div ref={setRef} className='grid grid-cols-3	justify-items-center gap-y-10'>
         {pokemons.map((pokemon) => (
           <div key={pokemon.id}>
             <PokemonCard

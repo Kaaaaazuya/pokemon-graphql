@@ -21,8 +21,9 @@ export const PokemonCard = ({ id, name, sprite, onClick }: PokemonListProps) => 
   return (
     <div key={id} onClick={onClick}>
       <Suspense fallback={<PokemonCardSkelton />}>
-        <p className='text-black'>{name}</p>
-        <p className='text-black'>{displayNum}</p>
+        <p className='text-black'>
+          {displayNum} : {name}
+        </p>
         <div className='bg-gray-200'>
           <Image src={replacedString} alt={name} width={200} height={200} priority={false} />
         </div>
