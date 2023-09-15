@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import useLanguage from '@/app/hooks/useLanguage'
+import { usePokemonSearch } from '@/app/hooks/usePokemonSearch'
 import { Pokemon_V2_Pokemon_Bool_Exp } from '@/graphql/generated/graphql'
 import useModal from '@/hooks/useModal'
 import { usePokemonList } from '@/hooks/usePokemonList'
@@ -19,6 +21,8 @@ type PokemonListProps = {
 export const PokemonList = ({ offset, limit, setRef, condition }: PokemonListProps) => {
   const { isModalOpen, openModal, closeModal } = useModal()
   const [selectedPokemonId, setSelectedPokemonId] = useState<string | null>(null)
+  const { convertEn2Jp } = usePokemonSearch()
+  const { language } = useLanguage()
 
   const result = usePokemonList(offset, limit, condition) // カスタムフックの使用
   const { data, error } = result
@@ -41,7 +45,7 @@ export const PokemonList = ({ offset, limit, setRef, condition }: PokemonListPro
           <div key={pokemon.id}>
             <PokemonCard
               id={pokemon.id}
-              name={pokemon.name}
+              name={language === 'jp' ? convertEn2Jp(pokemon.name) || '' : pokemon.name}
               sprite={pokemon.pokemon_v2_pokemonsprites[0].sprites}
               onClick={() => handleOpenModal(pokemon.id.toString())}
             />

@@ -5,6 +5,8 @@ import { useState, useCallback } from 'react'
 import { Pokemon_V2_Pokemon_Bool_Exp } from '@/graphql/generated/graphql'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 
+import { Language, LanguageContext } from '../components/LanguageContext'
+
 import { PokemonList } from './components/PokemonList'
 import { PokemonTypeFilter } from './components/PokemonTypeSelector'
 import { PokemonType } from './types/PokemonType'
@@ -12,6 +14,8 @@ import { PokemonType } from './types/PokemonType'
 const LIMIT = 30
 
 const Pokemon = () => {
+  const [language, setLanguage] = useState<Language>('jp')
+
   const [pageVariables, setPageVariables] = useState([
     {
       offset: 0,
@@ -46,29 +50,31 @@ const Pokemon = () => {
 
   return (
     <main className='bg-white'>
-      <div className=''>
-        <h1 className='bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-6xl font-extrabold text-transparent'>
-          Pokemon Zukan
-        </h1>
-      </div>
+      <LanguageContext.Provider value={{ language, setLanguage }}>
+        <div className=''>
+          <h1 className='bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-6xl font-extrabold text-transparent'>
+            {language === 'jp' ? 'ポケモン図鑑' : 'Pokemon Zukan'}
+          </h1>
+        </div>
 
-      <PokemonTypeFilter onChange={handleSelectedTypesChange} />
-      <hr className='my-4 h-0.5 border-t-0 bg-gray-100 opacity-100 dark:opacity-50' />
-      {pageVariables.map((v, i) => (
-        <PokemonList
-          key={i}
-          offset={v.offset}
-          limit={v.limit}
-          setRef={
-            i === pageVariables.length - 1
-              ? (ref) => {
-                  setLastElement(ref)
-                }
-              : undefined
-          }
-          condition={condition}
-        />
-      ))}
+        <PokemonTypeFilter onChange={handleSelectedTypesChange} />
+        <hr className='my-4 h-0.5 border-t-0 bg-gray-100 opacity-100 dark:opacity-50' />
+        {pageVariables.map((v, i) => (
+          <PokemonList
+            key={i}
+            offset={v.offset}
+            limit={v.limit}
+            setRef={
+              i === pageVariables.length - 1
+                ? (ref) => {
+                    setLastElement(ref)
+                  }
+                : undefined
+            }
+            condition={condition}
+          />
+        ))}
+      </LanguageContext.Provider>
     </main>
   )
 }

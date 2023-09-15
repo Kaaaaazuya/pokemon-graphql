@@ -18,6 +18,31 @@ type PokemonTypeKeys =
   | 'dark'
   | 'fairy'
 
+const typeTranslationMap: Record<PokemonTypeKeys, string> = {
+  normal: 'ノーマル',
+  fighting: 'かくとう',
+  flying: 'ひこう',
+  poison: 'どく',
+  ground: 'じめん',
+  rock: 'いわ',
+  bug: 'むし',
+  ghost: 'ゴースト',
+  steel: 'はがね',
+  fire: 'ほのお',
+  water: 'みず',
+  grass: 'くさ',
+  electric: 'でんき',
+  psychic: 'エスパー',
+  ice: 'こおり',
+  dragon: 'ドラゴン',
+  dark: 'あく',
+  fairy: 'フェアリー',
+}
+
+export const getTypeNameInJapanese = (type: PokemonTypeKeys): string => {
+  return typeTranslationMap[type]
+}
+
 export const PokemonType: Record<PokemonTypeKeys, number> = {
   normal: 1,
   fighting: 2,

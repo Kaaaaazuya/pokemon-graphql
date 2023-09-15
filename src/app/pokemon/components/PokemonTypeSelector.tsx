@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
 
-import { PokemonType, typeColor } from '../types/PokemonType'
+import useLanguage from '@/app/hooks/useLanguage'
+
+import { PokemonType, getTypeNameInJapanese, typeColor } from '../types/PokemonType'
 
 export const PokemonTypeFilter = ({
   onChange,
 }: {
   onChange: (selectedTypes: number[]) => void
 }) => {
+  const { language } = useLanguage()
   const [selectedTypes, setSelectedTypes] = useState<number[]>([...Object.values(PokemonType)])
   const [prevSelectedTypes, setPrevSelectedTypes] = useState<number[]>([])
 
@@ -55,7 +58,7 @@ export const PokemonTypeFilter = ({
                 : 'bg-white text-black'
             }`}
           >
-            {typeName}
+            {language === 'jp' ? getTypeNameInJapanese(typeName) : typeName}{' '}
           </span>
         ))}
       </div>

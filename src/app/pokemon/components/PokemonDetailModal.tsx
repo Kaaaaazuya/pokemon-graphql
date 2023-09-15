@@ -15,10 +15,12 @@ import { Bar } from 'react-chartjs-2'
 import { useQuery } from 'urql'
 
 import Modal from '@/app/components/Modal'
+import useLanguage from '@/app/hooks/useLanguage'
+import { usePokemonSearch } from '@/app/hooks/usePokemonSearch'
 import { graphql } from '@/graphql/generated'
 import { Query_Root } from '@/graphql/generated/graphql'
 
-import { ToTextColor, typeColor } from '../types/PokemonType'
+import { ToTextColor, getTypeNameInJapanese, typeColor } from '../types/PokemonType'
 
 export const options = {
   indexAxis: 'y' as const,
@@ -79,6 +81,8 @@ type PokemonDetailModalProps = {
 }
 
 export const PokemonDetailModal = ({ id, isModalOpen, closeModal }: PokemonDetailModalProps) => {
+  const { language } = useLanguage()
+  const { convertEn2Jp } = usePokemonSearch()
   const [result] = useQuery<Query_Root['pokemon_v2_pokemon']>({
     query: GetPokemonListDocument,
     variables: {
@@ -94,7 +98,9 @@ export const PokemonDetailModal = ({ id, isModalOpen, closeModal }: PokemonDetai
   }
   const pokemon = data.pokemon_v2_pokemon[0]
 
-  const displayTitle = `No.${pokemon.id} ${pokemon.name}`
+  const displayTitle = `No.${pokemon.id} ${
+    language === 'jp' ? convertEn2Jp(pokemon.name) || '' : pokemon.name
+  }`
   const replacedString = JSON.parse(
     pokemon.pokemon_v2_pokemonsprites[0].sprites,
   ).front_default?.replace('/media', 'https://raw.githubusercontent.com/PokeAPI/sprites/master')
@@ -142,7 +148,7 @@ export const PokemonDetailModal = ({ id, isModalOpen, closeModal }: PokemonDetai
                 typeColor[typeName]
               } text-${ToTextColor(typeName)}`}
             >
-              {typeName}
+              {language === 'jp' ? getTypeNameInJapanese(typeName) : typeName}
             </span>
           )
         })}
